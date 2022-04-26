@@ -9,6 +9,32 @@ select * from animals where neutered =true;
 select * from animals where name != 'Gabumon';
 select * from animals where weight_kg between 10.4 and 17.3;
 
+begin;
+update animals;
+set species = 'unspecified';
+select * from animals;
+rollback;
+select * from animals;
+
+begin;
+update animals 
+set species = 'digimon' where name ~ '.*(mon)';
+commit;
+
+begin;
+delete from animals;
+rollback;
+
+begin;
+delete from animals where date_of_birth>'2022-01-01';
+savepoint beforeWeightUpdate;
+update animals
+set weight_kg = weight_kg * -1;
+rollback to savepoint beforeWeightUpdate;
+update animals
+set weight_kg = weight_kg * -1 where weight_kg < 0;
+commit;
+
 select count(*) from animals;
 select count(*) from animals where escape_attempts = 0;
 select avg(weight_kg) from animals;

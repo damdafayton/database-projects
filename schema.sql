@@ -9,3 +9,6 @@ Create Table animals (
     neutered bool, 
     weight_kg numeric(5,2)
     );
+
+alter table animals
+add column species varchar;

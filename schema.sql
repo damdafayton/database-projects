@@ -55,3 +55,27 @@ add column species_id int references species(id);
 alter table animals
 add column owners_id int references owners(id);
 
+-- next exercise
+create table vets (
+    id serial primary key, 
+    name varchar(255), 
+    age int, 
+    date_of_graduation date
+    );
+
+create table specializations (
+    id serial primary key, 
+    species_id int, 
+    vets_id int, 
+    foreign key(species_id) references species(id), 
+    foreign key(vets_id) references vets(id)
+    );
+
+create table visits(
+    id serial primary key,
+    animals_id int references animals(id),
+    vets_id int references vets(id)
+    );
+
+alter table visits
+add column date date;

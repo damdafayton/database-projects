@@ -108,14 +108,6 @@ select animals.name, vets.name, date from visits
   where date = (select max(date) from visits);
 -- Devimon | Stephanie Mendez | 2021-05-04
 
-select vi.animals_id, vi.vets_id, sq.species_id, sq.vets from visits vi 
-join animals an 
-  on (an.id = vi.animals_id)
-join (
-  select sp.species_id, array_agg(sp.vets_id) vets from specializations sp
-  group by sp.species_id) sq
-  on (an.species_id = sq.species_id)
-;
 
 select count(*) from visits vi 
 join animals an 
@@ -127,6 +119,7 @@ join (
   where NOT (vi.vets_id = ANY(sq.vets))
 ;
 -- 12
+
 
 select sq.nm from (
 select count(sp.name) co, sp.name nm from visits vi

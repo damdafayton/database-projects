@@ -49,7 +49,94 @@ select * from animals where owners_id = (select id from owners where full_name =
 select * from animals where species_id = (select id from species where name = 'Pokemon');
 select full_name, name from owners full outer join animals on owners.id = animals.owners_id;
 select count(*), species.name from animals join species on animals.species_id = species.id group by species.name;
-select name from animals where (species_id = (select id from species where name = 'Digimon') and (owners_id = (select id from owners where full_name = 'Jennifer Orwell')));
+select name from animals where (
+  species_id = 
+  (select id from species where name = 'Digimon') 
+  and 
+  (owners_id = (select id from owners where full_name = 'Jennifer Orwell'))
+  );
 select * from animals where (escape_attempts < 1) and (owners_id = (select id from owners where full_name = 'Dean Winchester'));
 select count(*), full_name from animals join owners on animals.owners_id = owners.id group by full_name;
 select count(*) as total, full_name from animals join owners on animals.owners_id = owners.id group by full_name order by total desc limit 1;
+
+-- new exercise
+select name from animals where id = (        
+select animals_id from visits where date = ( 
+select max(date) from visits join vets on (visits.vets_id = vets.id) where vets.name = 'William Tatcher'
+group by vets_id
+));
+
+select count(animals_id) from visits where vets_id = (
+select id from vets where name = 'Stephanie Mendez'
+) group by vets_id;   
+
+select vets.name, species.name from specializations 
+full join vets on (specializations.vets_id = vets.id) 
+full join species on (specializations.species_id = species.id);
+
+select animals.name from animals where id = ( 
+select animals_id from visits where vets_id = (
+select id from vets where name = 'Stephanie Mendez' 
+));
+
+select animals.name from visits join animals on (visits.animals_id = animals.id)
+where (                                                                                               
+visits.vets_id = (select id from vets where name = 'Stephanie Mendez')                                    
+and
+visits.date between '2020-04-01' and '2020-08-30'
+);
+-- Agumon
+-- Blossom
+
+select name from animals where id = (
+select animals_id from (select count(animals_id), animals_id from visits group by animals_id order by count desc limit 1) sq
+);
+-- Boarmon
+
+select name from animals where id = (
+  select animals_id from visits where date = (
+    select min(date) from visits where vets_id = (
+      select id from vets where name = 'Maisy Smith'
+    )
+  group by vets_id)
+);
+-- Boarmon
+
+select animals.name, vets.name, date from visits 
+join animals on (animals.id = visits.animals_id) 
+join vets on (vets.id = visits.vets_id) 
+where date = (select max(date) from visits);
+-- Devimon | Stephanie Mendez | 2021-05-04
+
+select vi.animals_id, vi.vets_id, sq.species_id, sq.vets from visits vi 
+join animals an 
+  on (an.id = vi.animals_id)
+join (
+  select sp.species_id, array_agg(sp.vets_id) vets from specializations sp
+  group by sp.species_id) sq
+  on (an.species_id = sq.species_id)
+;
+
+select count(*) from visits vi 
+join animals an 
+  on (an.id = vi.animals_id)
+join (
+    select sp.species_id, array_agg(sp.vets_id) vets from specializations sp
+    group by sp.species_id) sq
+  on (an.species_id = sq.species_id)
+  where NOT (vi.vets_id = ANY(sq.vets))
+;
+-- 12
+
+select sq.nm from (
+select count(sp.name) co, sp.name nm from visits vi
+join animals an
+on (vi.animals_id = an.id)
+join species sp
+on (an.species_id = sp.id) 
+where (vi.vets_id = (select id from vets where name='Maisy Smith'))
+group by sp.name
+limit 1
+) sq
+;
+-- Digimon

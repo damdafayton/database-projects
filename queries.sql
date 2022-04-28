@@ -103,9 +103,9 @@ select name from animals where id = (
 -- Boarmon
 
 select animals.name, vets.name, date from visits 
-join animals on (animals.id = visits.animals_id) 
-join vets on (vets.id = visits.vets_id) 
-where date = (select max(date) from visits);
+  join animals on (animals.id = visits.animals_id) 
+  join vets on (vets.id = visits.vets_id) 
+  where date = (select max(date) from visits);
 -- Devimon | Stephanie Mendez | 2021-05-04
 
 select vi.animals_id, vi.vets_id, sq.species_id, sq.vets from visits vi 
@@ -130,13 +130,13 @@ join (
 
 select sq.nm from (
 select count(sp.name) co, sp.name nm from visits vi
-join animals an
-on (vi.animals_id = an.id)
-join species sp
-on (an.species_id = sp.id) 
-where (vi.vets_id = (select id from vets where name='Maisy Smith'))
-group by sp.name
-limit 1
+  join animals an
+    on (vi.animals_id = an.id)
+  join species sp
+    on (an.species_id = sp.id) 
+  where (vi.vets_id = (select id from vets where name='Maisy Smith'))
+  group by sp.name
+  limit 1
 ) sq
 ;
 -- Digimon
